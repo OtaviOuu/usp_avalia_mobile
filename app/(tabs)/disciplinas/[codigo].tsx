@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { match } from "ts-pattern";
 import { Disciplina } from "../../../types/types";
-
 export default function ShowDisciplinaScreen({ navigation, route }: any) {
   const disciplinaCodigo = useLocalSearchParams<{ codigo: string }>().codigo;
   const [disciplina, setDisciplinas] = useState<Disciplina>();
@@ -25,29 +25,31 @@ export default function ShowDisciplinaScreen({ navigation, route }: any) {
 
   return (
     <View>
-      {disciplina ? (
-        <View style={{ padding: 10 }}>
-          <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold" }}>
-            Professores:
-          </Text>
-          {disciplina.professores.map((professor) => (
-            <View
-              key={professor.id}
-              style={{
-                marginTop: 5,
-                padding: 10,
-                backgroundColor: "#f0f0f0",
-              }}
-            >
-              <Text style={{ fontWeight: "bold" }}>{professor.nome}</Text>
-              <Text>Email: {professor.email}</Text>
-              <Text>Salário: R$ {professor.salario.toFixed(2)}</Text>
+      {match(disciplina)
+        .with(undefined, () => <Text>Loading...</Text>)
+        .otherwise((disciplina) => {
+          return (
+            <View style={{ padding: 10 }}>
+              <Text style={{ fontSize: 20, marginTop: 10, fontWeight: "bold" }}>
+                Professores:
+              </Text>
+              {disciplina.professores.map((professor) => (
+                <View
+                  key={professor.id}
+                  style={{
+                    marginTop: 5,
+                    padding: 10,
+                    backgroundColor: "#f0f0f0",
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold" }}>{professor.nome}</Text>
+                  <Text>Email: {professor.email}</Text>
+                  <Text>Salário: R$ {professor.salario.toFixed(2)}</Text>
+                </View>
+              ))}
             </View>
-          ))}
-        </View>
-      ) : (
-        <Text>Loading...</Text>
-      )}
+          );
+        })}
     </View>
   );
 }
