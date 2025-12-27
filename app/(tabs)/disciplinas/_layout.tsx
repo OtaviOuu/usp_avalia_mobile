@@ -6,7 +6,9 @@ export default function DisciplinaLayout() {
       <Stack.Screen name="index" options={{ title: "Disciplinas" }} />
       <Stack.Screen
         name="[codigo]"
-        options={{ title: "Detalhes da Disciplina" }}
+        options={({ route }) => ({
+          title: `Disciplina ${route.params?.codigo}`,
+        })}
       />
     </Stack>
   );
